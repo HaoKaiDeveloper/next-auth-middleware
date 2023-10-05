@@ -12,10 +12,7 @@ export async function middleware(req: NextRequest) {
     try {
       const user = (await verify(token, "jwtsecret")) as userType | null;
       if (!user) {
-        return NextResponse.json(
-          { error: "Internal Server Error" },
-          { status: 401 }
-        );
+        return NextResponse.redirect(new URL("/", req.url));
       }
       const reqHeaders = new Headers(req.headers);
       reqHeaders.set("x-user-email", user.email);
@@ -27,10 +24,7 @@ export async function middleware(req: NextRequest) {
         },
       });
     } catch (err) {
-      return NextResponse.json(
-        { error: "Internal Server Error" },
-        { status: 401 }
-      );
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 }
